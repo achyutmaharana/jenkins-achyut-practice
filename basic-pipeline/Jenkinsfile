@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo 'Checking out source code from GitHub...'
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Running build stage...'
+                sh 'python3 --version'
+                sh 'python3 app.py'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                sh 'python3 test_app.py'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'BUILD SUCCESSFUL!'
+        }
+
+        failure {
+            echo 'BUILD FAILED!'
+        }
+
+        always {
+            echo 'Jenkins pipeline execution completed.'
+        }
+    }
+}
