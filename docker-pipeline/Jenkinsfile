@@ -12,18 +12,21 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo 'Installing Python dependencies...'
-                sh 'cd docker-pipeline && python3 -m pip install -r requirements.txt'
+                echo 'Creating Python virtual environment...'
+                sh 'cd docker-pipeline && python3 -m venv venv'
 
-                echo 'Checking Python application...'
-                sh 'cd docker-pipeline && python3 --version'
+                echo 'Installing Python dependencies...'
+                sh 'cd docker-pipeline && venv/bin/pip install -r requirements.txt'
+
+                echo 'Checking Python version...'
+                sh 'cd docker-pipeline && venv/bin/python --version'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Running Python tests...'
-                sh 'cd docker-pipeline && python3 test_app.py'
+                sh 'cd docker-pipeline && venv/bin/python test_app.py'
             }
         }
 
