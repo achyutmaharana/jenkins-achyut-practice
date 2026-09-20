@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo 'Checking out source code from GitHub...'
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Installing Python dependencies...'
+                sh 'cd docker-pipeline && python3 -m pip install -r requirements.txt'
+
+                echo 'Checking Python application...'
+                sh 'cd docker-pipeline && python3 --version'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running Python tests...'
+                sh 'cd docker-pipeline && python3 test_app.py'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                echo 'Building Docker image...'
+                sh 'docker build -t jenkins-docker-practice:1.0 ./docker-pipeline'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'BUILD SUCCESSFUL!'
+        }
+
+        failure {
+            echo 'BUILD FAILED!'
+        }
+
+        always {
+            echo 'Jenkins pipeline execution completed.'
+        }
+    }
+}
