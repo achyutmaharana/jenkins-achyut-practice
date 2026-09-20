@@ -14,14 +14,14 @@ pipeline {
             steps {
                 echo 'Running build stage...'
                 sh 'python3 --version'
-                sh 'python3 app.py'
+                sh 'cd basic-pipeline && python3 app.py'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                sh 'python3 test_app.py'
+                sh 'cd basic-pipeline && python3 test_app.py'
             }
         }
     }
